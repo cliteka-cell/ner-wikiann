@@ -112,6 +112,61 @@ with casual, conversational text (e.g. *"Jake Johnson loves Sarah who lives in M
 which correctly signals the model's own uncertainty. This is a known limitation of
 training on domain-specific corpora and a strong argument for diverse training data.
 
+## Error Analysis
+
+Ran the model against the full test set (80,326 tokens) and categorized every mistake.
+
+### Error Breakdown
+
+| Error Type | Count | % of Errors | Meaning |
+|------------|-------|-------------|---------|
+| Wrong entity type | 4,211 | 74.2% | Found the entity, classified it wrong |
+| False negative | 769 | 13.5% | Missed a real entity entirely |
+| False positive | 698 | 12.3% | Predicted an entity that isn't one |
+
+The model is good at *finding* entities but struggles to *classify* them correctly.
+Low false negatives (13.5%) confirm this — missing entities is rare.
+
+### Top Confusion Pairs
+
+| True Label | Predicted | Count | Reason |
+|------------|-----------|-------|--------|
+| I-LOC | I-ORG | 685 | Geopolitical ambiguity |
+| I-ORG | I-LOC | 594 | Geopolitical ambiguity |
+| I-PER | I-ORG | 515 | Organizations named after people |
+| I-ORG | I-PER | 506 | Organizations named after people |
+| B-ORG | B-LOC | 402 | Location/organization boundary |
+
+**LOC ↔ ORG accounts for 1,279 wrong-type errors** — the single biggest failure mode.
+In Wikipedia text, geopolitical entities like countries and cities frequently act as
+organizations (*"France announced..."*), creating systematic ambiguity that no model
+can resolve without broader context.
+
+### Real Examples from the Test Set
+
+**I-LOC → I-ORG (model predicts ORG, truth is LOC)**
+- *"Encash Network Service"* — "Network Service" reads naturally as an organization.
+  The model's prediction is the more intuitive call.
+
+**I-PER → I-ORG (model predicts ORG, truth is PER)**
+- *"List of The O.C. characters"* — ground truth tags "The O.C." as PER because it
+  references fictional people. The model predicts ORG, which is arguably more correct
+  for a TV show title. This is a dataset annotation error, not a model failure.
+
+**B-ORG → B-LOC (model predicts LOC, truth is ORG)**
+- *"Jhansi (JHS)"* — Jhansi is a city in India, tagged ORG in the dataset but
+  predicted LOC by the model. The model is correct.
+- *"Mittani"* — an ancient empire that simultaneously functions as a civilization,
+  location, and political entity. No annotation guideline handles this cleanly.
+
+### Key Finding
+
+In several cases the model's predictions are **more linguistically defensible than
+the ground truth labels**. This points to annotation inconsistencies in WikiANN itself —
+a known limitation of automatically constructed NER datasets derived from Wikipedia
+infoboxes. Manual annotation with explicit guidelines would likely improve both
+dataset quality and model performance.
+
 ## How to Run
 
 Open `exploration.ipynb` in Google Colab and run all cells.
