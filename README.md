@@ -102,6 +102,14 @@ between epochs 2 and 3 while F1 kept improving. This suggests the model began
 memorizing training examples. Early stopping or increased dropout would likely
 improve generalization.
 
+**Domain mismatch:** WikiANN is built from Wikipedia — formal, encyclopedic text
+about well-known entities. The model performs confidently on Wikipedia-style sentences
+(e.g. *"Barack Obama served as the 44th President of the United States"*) but struggles
+with casual, conversational text (e.g. *"Jake Johnson loves Sarah who lives in Michigan LA in USA"*).
+"Sarah" gets misclassified as ORG and "LA" as ORG — both with low confidence scores,
+which correctly signals the model's own uncertainty. This is a known limitation of
+training on domain-specific corpora and a strong argument for diverse training data.
+
 ## How to Run
 
 Open `exploration.ipynb` in Google Colab and run all cells.
