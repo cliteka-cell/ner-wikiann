@@ -1,5 +1,7 @@
 # Named Entity Recognition with DistilBERT
 
+🔗 **[Try the live demo](https://huggingface.co/spaces/Reshiman/ner-wikiann)**
+
 Fine-tuned DistilBERT on the WikiANN English dataset for Named Entity Recognition (NER).
 Trained to detect **people, organizations, and locations** in plain text.
 
@@ -120,3 +122,7 @@ No local setup required — all dependencies are installed in the first cell.
 - [HuggingFace Transformers](https://github.com/huggingface/transformers)
 - [HuggingFace Datasets](https://github.com/huggingface/datasets)
 - Python 3.x, PyTorch
+
+## Live Demo
+
+Try it yourself: [huggingface.co/spaces/Reshiman/ner-wikiann](https://huggingface.co/spaces/Reshiman/ner-wikiann)
