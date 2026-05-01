@@ -1,0 +1,5 @@
+transformers==4.x
+datasets==4.8.5
+evaluate
+accelerate
+seqeval
